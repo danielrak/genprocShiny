@@ -1,0 +1,17 @@
+Package: gprocpoc
+Title: Generalized Processing Facilitator with R
+Version: 0.0.0.9000
+Authors@R: 
+    person("Daniel", "RAKOTOMALALA", , "rakdanielh@gmail.com", role = c("aut", "cre"))
+Description: This Package helps setting up large-scale operations with R.
+License: MIT + file LICENSE
+Imports: 
+    config,
+    golem,
+    shiny
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.3
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
