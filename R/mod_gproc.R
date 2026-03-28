@@ -54,8 +54,12 @@ mod_gproc_server <- function(id,
       req(input$go)
 
       tryCatch({
-        job <- genproc(mask = mask_data_return(), func = func_code(), args_mapping = args(), workers = 10,
-                       proc_label = proc_label(), logs_path = logs_path())
+        job <- genproc(mask = mask_data_return(),
+                       func = func_code_return(),
+                       args_mapping = args_mapping_return(),
+                       workers = 10,
+                       proc_label = proc_label(),
+                       logs_path = logs_path())
         job
       },
       error = function (e) {
@@ -63,12 +67,21 @@ mod_gproc_server <- function(id,
       })
     })
 
+    file <- reactive(file.path(logs_path(), paste0(proc_label(), ".rds")))
+
     logs_data <- reactive({
-      file <- file.path(logs_path(), paste0(proc_label(), ".rds"))
-      req(file.exists(file))
-      ldata <- readRDS(file)
+
+      req(file.exists(file()))
+      ldata <- readRDS(file())
       stopifnot(is.data.frame(ldata))
       ldata
+    })
+
+    output$logmsg <- renderPrint({
+      req(input$getlogs)
+      if (file.exists(file())) {
+        file()
+      } else {paste0(file(), " not found")}
     })
 
     output$log <- renderDataTable({
