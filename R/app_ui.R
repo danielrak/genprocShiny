@@ -11,6 +11,7 @@ app_ui <- function(request) {
     # Your application UI logic
     fluidPage(
       # golem::golem_welcome_page(), # Remove this line to start building your UI
+      titlePanel("Generalized Processing Helper with R"),
       mod_mask_ui("mask_1"),
       mod_gproc_ui("gproc_1")
     )

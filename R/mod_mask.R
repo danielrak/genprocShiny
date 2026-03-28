@@ -10,9 +10,11 @@
 mod_mask_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    fileInput(ns("maskfile"), "Mask file"),
-    dataTableOutput(ns("maskdata"))
-
+    fluidRow(
+      column(10,
+             fileInput(ns("maskfile"), "Mask file"),
+             dataTableOutput(ns("maskdata")))
+      )
   )
 }
 
