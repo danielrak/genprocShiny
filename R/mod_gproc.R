@@ -18,14 +18,17 @@ mod_gproc_ui <- function(id) {
 
     textAreaInput(ns("argmap"), label = "Args mapping", width = "400px", height = "100px"),
     actionButton(ns("argsok"), label = "Validate args map code"),
-    "this is your argmap:",
+    "This is your args mapping:",
     verbatimTextOutput(ns("argtext")),
 
     actionButton(ns("go"), label = "Launch process"),
     "Launch exectution console output:",
-    verbatimTextOutput(ns("goout"))
-    # ,
-    # dataTableOutput(ns("log"))
+    verbatimTextOutput(ns("goout")),
+
+    actionButton(ns("getlogs"), label = "Get logs"),
+    'Here is the logs:',
+    verbatimTextOutput(ns("logmsg")),
+    dataTableOutput(ns("log"))
 
   )
 }
@@ -45,13 +48,31 @@ mod_gproc_server <- function(id, mask_data_return){
     output$goout <- renderPrint({
       req(input$go)
 
-      tryCatch({genproc(mask = mask_data_return(), func = func_code(), args_mapping = args(), workers = 10,
-                        proc_label = "first", logs_path = "D:/genproc_features/out")}, error = function (e) {
-                          e$message
-                        })
-
-
+      tryCatch({
+        job <- genproc(mask = mask_data_return(), func = func_code(), args_mapping = args(), workers = 10,
+                       proc_label = "first", logs_path = "D:/gprocpoc/out")
+        job
+      },
+      error = function (e) {
+        e$message
+      })
     })
+
+    observeEvent(input$getlogs, {
+      invalidateLater(1000) # re-run l'observer chaque 1000 ms?
+      if ("job" %in% ls()) {
+        observeEvent({
+          ! job$is_alive()},
+          {
+
+            logs <- readRDS(file.path(logs_path, paste0(proc_label, ".rds")))
+            output$log <- renderDataTable(logs)
+            output$logmsg <- renderPrint("Logs successfully read")
+
+          })
+      } else {output$logmsg <- renderPrint("No logs produced yet")}
+    })
+
 
   })
 }

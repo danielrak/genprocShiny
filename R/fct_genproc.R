@@ -11,7 +11,11 @@
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-genproc <- function (mask, func, args_mapping, workers = 10, proc_label, logs_path) {
+genproc <- function (mask, func, args_mapping, workers, proc_label, logs_path) {
+
+  stopifnot(is.data.frame(mask))
+  stopifnot(is.function(func))
+  stopifnot(dir.exists(logs_path) || dir.create(logs_path))
 
   func_renamed <- rename_function_params(func, mapping = args_mapping)
   func_trycatch_logrow <- add_trycatch_logrow(func_renamed)
