@@ -23,8 +23,12 @@ mod_mask_server <- function(id){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     mask_file <- reactive(input$maskfile)
-    mask_data <- reactive(rio::import(mask_file()[["datapath"]]))
+    mask_data <- reactive({
+      req(mask_file())
+      rio::import(mask_file()[["datapath"]])})
     output$maskdata <- renderDataTable(mask_data())
+
+    mask_data
 
   })
 }
