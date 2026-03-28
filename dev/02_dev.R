@@ -22,10 +22,13 @@ attachment::att_amend_desc()
 ## Create a module infrastructure in R/
 golem::add_module(name = "mask", with_test = TRUE) # Name of the module
 golem::add_module(name = "func_code", with_test = TRUE) # Name of the module
+golem::add_module(name = "gproc", with_test = TRUE) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
-golem::add_fct("helpers", with_test = TRUE)
+golem::add_fct("add_trycatch_logrow", with_test = TRUE)
+golem::add_fct("rename_function_params", with_test = TRUE)
+golem::add_fct("genproc", with_test = TRUE)
 golem::add_utils("helpers", with_test = TRUE)
 
 ## External resources
