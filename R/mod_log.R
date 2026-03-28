@@ -10,16 +10,19 @@
 mod_log_ui <- function(id) {
   ns <- NS(id)
   tagList(
-
-    tags$h3("Logs directory path"),
-    shinyDirButton(ns("logspath"), title  = "Logs directory path", label = "Select dir"),
-    tags$h5("Selected logs directory:"),
-    wellPanel(verbatimTextOutput("logspathout")),
-    actionButton(ns("getlogs"), label = "Get logs"),
-    tags$h5('Get logs console output'),
-    wellPanel(verbatimTextOutput(ns("logmsg"))),
-    tags$h3("Process logs"),
-    wellPanel(dataTableOutput(ns("log")))
+    wellPanel(style = "background-color: #ffffe0;",
+    fluidRow(
+      column(6,
+             tags$h3("Get logs"),
+             actionButton(ns("getlogs"), label = "Get logs"),
+             tags$h5('Get logs console output'),
+             wellPanel(verbatimTextOutput(ns("logmsg")))),
+      column(6,
+             tags$h3("Process logs"),
+             wellPanel(style = "height: 150px; overflow-y: auto;",
+                       dataTableOutput(ns("log"))))
+    )
+    )
   )
 }
 
@@ -29,15 +32,6 @@ mod_log_ui <- function(id) {
 mod_log_server <- function(id){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
-
-    logs_path <- reactive({
-      req(input$logspath)
-      parseDirPath(volumes, input$logspath)})
-
-    output$logspathout <- renderPrint({
-      req(input$logspath)
-      logs_path()
-    })
 
     file <- reactive(file.path(logs_path(), paste0(proc_label(), ".rds")))
 

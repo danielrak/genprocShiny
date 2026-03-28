@@ -12,14 +12,23 @@ mod_gproc_ui <- function(id) {
   ns <- NS(id)
   tagList(
 
+    wellPanel(style = "background-color: #ffffe0;",
     fluidRow(
-      column(3,
+      column(4,
              textInput(ns("proclabel"), label = tags$h3("Proc label"), value = "first")),
 
-      column(3,
+      column(4,
+             tags$h3("Logs directory path"),
+             shinyDirButton(ns("logspath"), title  = "Logs directory path", label = "Select dir"),
+             tags$h5("Selected logs directory"),
+             wellPanel(verbatimTextOutput("logspathout"))),
+
+      column(4,
+             tags$h3("Launch"),
              actionButton(ns("go"), label = "Launch process"),
              tags$h5("Launch exectution console output"),
              wellPanel(verbatimTextOutput(ns("goout")))))
+    )
   )
 }
 
@@ -33,6 +42,15 @@ mod_gproc_server <- function(id,
     ns <- session$ns
 
     proc_label <- reactive(input$proclabel)
+
+    logs_path <- reactive({
+      req(input$logspath)
+      parseDirPath(volumes, input$logspath)})
+
+    output$logspathout <- renderPrint({
+      req(input$logspath)
+      logs_path()
+    })
 
     volumes <- c("Home" = ".", "D:" = "D:/")
     shinyDirChoose(input, "logspath", roots = volumes, session = session)

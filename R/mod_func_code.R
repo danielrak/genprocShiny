@@ -11,28 +11,30 @@ mod_func_code_ui <- function(id) {
   ns <- NS(id)
   tagList(
 
+    wellPanel(style = "background-color: #ffffe0;",
     fluidRow(
 
       column(6,
              textAreaInput(ns("funccode"), label = tags$h3("Your function code"),
-                           width = "800px", height = "150px"),
+                           width = "800px", height = "100px"),
              actionButton(ns("funcok"), label = "Validate function code")),
 
       column(6,
              tags$h3("This is your function"),
-             wellPanel(style = "height: 150px; overflow-y: auto;",
+             wellPanel(style = "height: 100px; overflow-y: auto;",
                        verbatimTextOutput(ns("functext"))))),
 
     fluidRow(
       column(6,
              textAreaInput(ns("argmap"), label = tags$h3("Args mapping"),
-                           width = "800px", height = "150px"),
+                           width = "800px", height = "100px"),
              actionButton(ns("argsok"), label = "Validate args map code")),
 
       column(6,
              tags$h3("This is your args mapping"),
-             wellPanel(style = "height: 150px; overflow-y: auto;",
+             wellPanel(style = "height: 100px; overflow-y: auto;",
                        verbatimTextOutput(ns("argtext")))))
+    )
   )
 }
 
