@@ -7,6 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom shinyFiles shinyDirButton shinyDirChoose parseDirPath
 mod_gproc_ui <- function(id) {
   ns <- NS(id)
   tagList(
@@ -20,6 +21,10 @@ mod_gproc_ui <- function(id) {
     actionButton(ns("argsok"), label = "Validate args map code"),
     "This is your args mapping:",
     verbatimTextOutput(ns("argtext")),
+
+    textInput(ns("proclabel"), label = "Proc label", value = "first"),
+    shinyDirButton(ns("logspath"), title  = "Logs directory path", label = "Select dir"),
+
 
     actionButton(ns("go"), label = "Launch process"),
     "Launch exectution console output:",
@@ -45,12 +50,21 @@ mod_gproc_server <- function(id, mask_data_return){
     args <- eventReactive(input$argsok, eval(parse(text = input$argmap)))
     output$argtext <- renderPrint(args())
 
+    proc_label <- reactive(input$proclabel)
+
+    volumes <- c("Home" = ".", "D:" = "D:/")
+    shinyDirChoose(input, "logspath", roots = volumes, session = session)
+
+    logs_path <- reactive({
+      req(input$logspath)
+      parseDirPath(volumes, input$logspath)})
+
     output$goout <- renderPrint({
       req(input$go)
 
       tryCatch({
         job <- genproc(mask = mask_data_return(), func = func_code(), args_mapping = args(), workers = 10,
-                       proc_label = "first", logs_path = "D:/gprocpoc/out")
+                       proc_label = proc_label(), logs_path = logs_path())
         job
       },
       error = function (e) {
@@ -58,20 +72,11 @@ mod_gproc_server <- function(id, mask_data_return){
       })
     })
 
-    observeEvent(input$getlogs, {
-      invalidateLater(1000) # re-run l'observer chaque 1000 ms?
-      if ("job" %in% ls()) {
-        observeEvent({
-          ! job$is_alive()},
-          {
-
-            logs <- readRDS(file.path(logs_path, paste0(proc_label, ".rds")))
-            output$log <- renderDataTable(logs)
-            output$logmsg <- renderPrint("Logs successfully read")
-
-          })
-      } else {output$logmsg <- renderPrint("No logs produced yet")}
-    })
+    # logs_data <- reactive({
+    #   req(file.exists())
+    # })
+    #
+    # observeEvent()
 
 
   })
