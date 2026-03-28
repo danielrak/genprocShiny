@@ -76,7 +76,7 @@ mod_gproc_server <- function(id, mask_data_return){
       file <- file.path(logs_path(), paste0(proc_label(), ".rds"))
       req(file.exists(file))
       ldata <- readRDS(file)
-      # stopifnot(is.data.frame(file))
+      stopifnot(is.data.frame(ldata))
       ldata
     })
 
