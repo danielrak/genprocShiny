@@ -72,13 +72,17 @@ mod_gproc_server <- function(id, mask_data_return){
       })
     })
 
-    # logs_data <- reactive({
-    #   req(file.exists())
-    # })
-    #
-    # observeEvent()
+    logs_data <- reactive({
+      file <- file.path(logs_path(), paste0(proc_label(), ".rds"))
+      req(file.exists(file))
+      ldata <- readRDS(file)
+      # stopifnot(is.data.frame(file))
+      ldata
+    })
 
-
+    output$log <- renderDataTable({
+      req(input$getlogs)
+      logs_data()})
   })
 }
 
