@@ -12,43 +12,34 @@ mod_gproc_ui <- function(id) {
   ns <- NS(id)
   tagList(
 
-    textAreaInput(ns("funccode"), label = "Your function code", width = "400px", height = "200px"),
-    actionButton(ns("funcok"), label = "Validate function code"),
-    "This is your function:",
-    verbatimTextOutput(ns("functext")),
+    fluidRow(
+      column(3,
+             textInput(ns("proclabel"), label = tags$h3("Proc label"), value = "first"),
+             tags$h3("Logs directory path"),
+             shinyDirButton(ns("logspath"), title  = "Logs directory path", label = "Select dir")),
 
-    textAreaInput(ns("argmap"), label = "Args mapping", width = "400px", height = "100px"),
-    actionButton(ns("argsok"), label = "Validate args map code"),
-    "This is your args mapping:",
-    verbatimTextOutput(ns("argtext")),
+      column(3,
+             actionButton(ns("go"), label = "Launch process"),
+             tags$h5("Launch exectution console output"),
+             wellPanel(verbatimTextOutput(ns("goout")))),
 
-    textInput(ns("proclabel"), label = "Proc label", value = "first"),
-    shinyDirButton(ns("logspath"), title  = "Logs directory path", label = "Select dir"),
-
-
-    actionButton(ns("go"), label = "Launch process"),
-    "Launch exectution console output:",
-    verbatimTextOutput(ns("goout")),
-
-    actionButton(ns("getlogs"), label = "Get logs"),
-    'Here is the logs:',
-    verbatimTextOutput(ns("logmsg")),
-    dataTableOutput(ns("log"))
-
+      column(6,
+             actionButton(ns("getlogs"), label = "Get logs"),
+             tags$h5('Get logs console output'),
+             wellPanel(verbatimTextOutput(ns("logmsg"))),
+             tags$h3("Process logs"),
+             wellPanel(dataTableOutput(ns("log")))))
   )
 }
 
 #' gproc Server Functions
 #'
 #' @noRd
-mod_gproc_server <- function(id, mask_data_return){
+mod_gproc_server <- function(id,
+                             mask_data_return,
+                             func_code_return, args_mapping_return){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
-
-    func_code <- eventReactive(input$funcok, eval(parse(text = input$funccode)))
-    output$functext <- renderPrint(func_code())
-    args <- eventReactive(input$argsok, eval(parse(text = input$argmap)))
-    output$argtext <- renderPrint(args())
 
     proc_label <- reactive(input$proclabel)
 

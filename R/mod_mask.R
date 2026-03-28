@@ -11,9 +11,11 @@ mod_mask_ui <- function(id) {
   ns <- NS(id)
   tagList(
     fluidRow(
-      column(10,
-             fileInput(ns("maskfile"), "Mask file"),
-             dataTableOutput(ns("maskdata")))
+      column(6,
+             fileInput(ns("maskfile"), tags$h3("Mask file"))),
+      column(6,
+             tags$h3("Mask data"),
+             wellPanel(dataTableOutput(ns("maskdata"))))
       )
   )
 }
