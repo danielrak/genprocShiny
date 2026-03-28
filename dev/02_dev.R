@@ -23,6 +23,7 @@ attachment::att_amend_desc()
 golem::add_module(name = "mask", with_test = TRUE) # Name of the module
 golem::add_module(name = "func_code", with_test = TRUE) # Name of the module
 golem::add_module(name = "gproc", with_test = TRUE) # Name of the module
+golem::add_module(name = "log", with_test = TRUE) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*

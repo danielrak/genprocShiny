@@ -14,21 +14,12 @@ mod_gproc_ui <- function(id) {
 
     fluidRow(
       column(3,
-             textInput(ns("proclabel"), label = tags$h3("Proc label"), value = "first"),
-             tags$h3("Logs directory path"),
-             shinyDirButton(ns("logspath"), title  = "Logs directory path", label = "Select dir")),
+             textInput(ns("proclabel"), label = tags$h3("Proc label"), value = "first")),
 
       column(3,
              actionButton(ns("go"), label = "Launch process"),
              tags$h5("Launch exectution console output"),
-             wellPanel(verbatimTextOutput(ns("goout")))),
-
-      column(6,
-             actionButton(ns("getlogs"), label = "Get logs"),
-             tags$h5('Get logs console output'),
-             wellPanel(verbatimTextOutput(ns("logmsg"))),
-             tags$h3("Process logs"),
-             wellPanel(dataTableOutput(ns("log")))))
+             wellPanel(verbatimTextOutput(ns("goout")))))
   )
 }
 
@@ -46,10 +37,6 @@ mod_gproc_server <- function(id,
     volumes <- c("Home" = ".", "D:" = "D:/")
     shinyDirChoose(input, "logspath", roots = volumes, session = session)
 
-    logs_path <- reactive({
-      req(input$logspath)
-      parseDirPath(volumes, input$logspath)})
-
     output$goout <- renderPrint({
       req(input$go)
 
@@ -66,32 +53,5 @@ mod_gproc_server <- function(id,
         e$message
       })
     })
-
-    file <- reactive(file.path(logs_path(), paste0(proc_label(), ".rds")))
-
-    logs_data <- reactive({
-
-      req(file.exists(file()))
-      ldata <- readRDS(file())
-      stopifnot(is.data.frame(ldata))
-      ldata
-    })
-
-    output$logmsg <- renderPrint({
-      req(input$getlogs)
-      if (file.exists(file())) {
-        file()
-      } else {paste0(file(), " not found")}
-    })
-
-    output$log <- renderDataTable({
-      req(input$getlogs)
-      logs_data()})
   })
 }
-
-## To be copied in the UI
-# mod_gproc_ui("gproc_1")
-
-## To be copied in the server
-# mod_gproc_server("gproc_1")

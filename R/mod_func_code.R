@@ -13,24 +13,26 @@ mod_func_code_ui <- function(id) {
 
     fluidRow(
 
-      column(3,
+      column(6,
              textAreaInput(ns("funccode"), label = tags$h3("Your function code"),
                            width = "800px", height = "150px"),
              actionButton(ns("funcok"), label = "Validate function code")),
 
-      column(3,
+      column(6,
              tags$h3("This is your function"),
-             wellPanel(verbatimTextOutput(ns("functext"))))),
+             wellPanel(style = "height: 150px; overflow-y: auto;",
+                       verbatimTextOutput(ns("functext"))))),
 
     fluidRow(
-      column(3,
+      column(6,
              textAreaInput(ns("argmap"), label = tags$h3("Args mapping"),
                            width = "800px", height = "150px"),
              actionButton(ns("argsok"), label = "Validate args map code")),
 
-      column(3,
+      column(6,
              tags$h3("This is your args mapping"),
-             wellPanel(verbatimTextOutput(ns("argtext")))))
+             wellPanel(style = "height: 150px; overflow-y: auto;",
+                       verbatimTextOutput(ns("argtext")))))
   )
 }
 

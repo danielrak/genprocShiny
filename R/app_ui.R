@@ -13,7 +13,9 @@ app_ui <- function(request) {
       # golem::golem_welcome_page(), # Remove this line to start building your UI
       titlePanel("Generalized Processing Helper with R"),
       mod_mask_ui("mask_1"),
-      mod_func_code_ui("func_1"),
+      fluidRow(
+        column(6, mod_func_code_ui("func_1")),
+        column(6, mod_log_ui("log_1"))),
       mod_gproc_ui("gproc_1")
     )
   )

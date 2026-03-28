@@ -15,7 +15,8 @@ mod_mask_ui <- function(id) {
              fileInput(ns("maskfile"), tags$h3("Mask file"))),
       column(6,
              tags$h3("Mask data"),
-             wellPanel(dataTableOutput(ns("maskdata"))))
+             wellPanel(style = "height: 150px; overflow-y: auto;",
+                       dataTableOutput(ns("maskdata"))))
       )
   )
 }
@@ -30,7 +31,9 @@ mod_mask_server <- function(id){
     mask_data <- reactive({
       req(mask_file())
       rio::import(mask_file()[["datapath"]])})
-    output$maskdata <- renderDataTable(mask_data())
+    output$maskdata <- renderDataTable({
+      DT::datatable(mask_data(),
+                    options = list(scrioolY = "300px"))})
 
     mask_data
 
