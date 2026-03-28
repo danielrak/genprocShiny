@@ -21,7 +21,7 @@ mod_gproc_ui <- function(id) {
              tags$h3("Logs directory path"),
              shinyDirButton(ns("logspath"), title  = "Logs directory path", label = "Select dir"),
              tags$h5("Selected logs directory"),
-             wellPanel(verbatimTextOutput("logspathout"))),
+             wellPanel(verbatimTextOutput(ns("logspathout")))),
 
       column(4,
              tags$h3("Launch"),
@@ -71,5 +71,9 @@ mod_gproc_server <- function(id,
         e$message
       })
     })
+
+    list(logs_path_return = logs_path,
+         proc_label_return = proc_label)
+
   })
 }

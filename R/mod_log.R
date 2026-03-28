@@ -29,14 +29,16 @@ mod_log_ui <- function(id) {
 #' log Server Functions
 #'
 #' @noRd
-mod_log_server <- function(id){
-  moduleServer(id, function(input, output, session){
-    ns <- session$ns
+mod_log_server <- function(id, logs_path_return, proc_label_return) {
+  moduleServer(id, function(input, output, session) {
 
-    file <- reactive(file.path(logs_path(), paste0(proc_label(), ".rds")))
+    file <- reactive({
+      req(logs_path_return())
+      req(proc_label_return())
+      file.path(logs_path_return(), paste0(proc_label_return(), ".rds"))
+    })
 
     logs_data <- reactive({
-
       req(file.exists(file()))
       ldata <- readRDS(file())
       stopifnot(is.data.frame(ldata))
@@ -46,16 +48,16 @@ mod_log_server <- function(id){
     output$logmsg <- renderPrint({
       req(input$getlogs)
       if (file.exists(file())) {
-        file()
-      } else {paste0(file(), " not found")}
+        paste("Log file found:", file())
+      } else {
+        paste("Log file not found:", file())
+      }
     })
 
     output$log <- renderDataTable({
       req(input$getlogs)
-      logs_data()})
-
-    list("logmsg_return" = logmsg, "log_return" = log)
-
+      logs_data()
+    })
   })
 }
 
