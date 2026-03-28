@@ -29,7 +29,7 @@ You can install the development version of `{gprocpoc}` like so:
 
 ## Run
 
-You can launch the application by running:
+You can launch the application by running this:
 
 ```{r, eval = FALSE}
 gprocpoc::run_app()

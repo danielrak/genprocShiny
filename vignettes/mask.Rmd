@@ -1,0 +1,21 @@
+---
+title: "mask"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{mask}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(gprocpoc)
+```
+
+The mask is a data-frame-like presentation of the operation components.
