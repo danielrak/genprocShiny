@@ -15,8 +15,8 @@ app_ui <- function(request) {
           class = "app-header",
           tags$div(
             class = "app-header-text",
-            tags$h1("Generalized Processing Helper with R"),
-            tags$h3("A minimal Shiny interface for genproc")
+            tags$h1("genproc - Generalized Processing Helper with R"),
+            tags$h3("PoC: minimal Shiny interface")
           ),
           tags$img(
             src = "www/favicon.png",
