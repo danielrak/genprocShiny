@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(gprocpoc)
+library(genprocpoc)
 
-test_check("gprocpoc")
+test_check("genprocpoc")

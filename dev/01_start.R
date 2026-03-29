@@ -19,9 +19,9 @@
 ## to change the name in the app_sys() function in app_config.R /!\
 ##
 golem::fill_desc(
-  pkg_name = "gprocpoc", # The name of the golem package containing the app (typically lowercase, no underscore or periods)
-  pkg_title = "Generalized Processing Facilitator with R", # What the Package Does (One Line, Title Case, No Period)
-  pkg_description = "This Package helps setting up large-scale operations with R.", # What the package does (one paragraph).
+  pkg_name = "genprocpoc", # The name of the golem package containing the app (typically lowercase, no underscore or periods)
+  pkg_title = "Generalized Processing Helper with R", # What the Package Does (One Line, Title Case, No Period)
+  pkg_description = "PoC Shiny app / Package that provides tools for applying a user-defined function over a parameterized input table with logging and parallel execution.", # What the package does (one paragraph).
   authors = person(
     given = "Daniel", # Your First Name
     family = "RAKOTOMALALA", # Your Last Name
