@@ -65,7 +65,7 @@ usethis::use_git()
 ## Sets the remote associated with 'name' to 'url'
 usethis::use_git_remote(
   name = "origin",
-  url = "https://github.com/danielrak/genprocpoc.git"
+  url = "https://github.com/danielrak/genprocpoc.git", overwrite = TRUE
 )
 
 # You're now set! ----
