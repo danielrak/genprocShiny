@@ -14,19 +14,20 @@ mod_gproc_ui <- function(id) {
 
     wellPanel(class = "gp-well1",
     fluidRow(
+      tags$h2("3 - Execution"),
       column(4,
-             textInput(ns("proclabel"), label = tags$h3("Proc label"), value = "first")),
+             textInput(ns("proclabel"), label = tags$h3("Process label"), value = "first")),
 
       column(4,
-             tags$h3("Logs directory path"),
-             shinyDirButton(ns("logspath"), title  = "Logs directory path", label = "Select dir"),
-             tags$h5("Selected logs directory"),
+             tags$h3("Logs directory"),
+             shinyDirButton(ns("logspath"), title  = "Logs directory", label = "Select folder"),
+             tags$h5("Logs directory"),
              wellPanel(verbatimTextOutput(ns("logspathout")))),
 
       column(4,
-             tags$h3("Launch"),
-             actionButton(ns("go"), label = "Launch process"),
-             tags$h5("Launch exectution console output"),
+             tags$h3("Run process"),
+             actionButton(ns("go"), label = "Run"),
+             tags$h5("Exectution status"),
              wellPanel(verbatimTextOutput(ns("goout")))))
     )
   )

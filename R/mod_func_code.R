@@ -14,26 +14,27 @@ mod_func_code_ui <- function(id) {
     wellPanel(class = "gp-well1",
     fluidRow(
 
+      tags$h2("2 - Function"),
       column(6,
-             textAreaInput(ns("funccode"), label = tags$h3("Your function code"),
+             textAreaInput(ns("funccode"), label = tags$h3("Write your function code"),
                            width = "800px", height = "100px"),
-             fluidRow(column(4, actionButton(ns("funcok"), label = "Validate function code")),
+             fluidRow(column(4, actionButton(ns("funcok"), label = "Validate function")),
                       column(6, wellPanel(verbatimTextOutput(ns("funccheck")))))),
 
       column(6,
-             tags$h3("This is your function"),
+             tags$h3("Function preview"),
              wellPanel(class = "gp-well2",
                        verbatimTextOutput(ns("functext"))))),
 
     fluidRow(
       column(6,
-             textAreaInput(ns("argmap"), label = tags$h3("Args mapping"),
+             textAreaInput(ns("argmap"), label = tags$h3("Map your function arguments to mask names"),
                            width = "800px", height = "100px"),
-             fluidRow(column(4, actionButton(ns("argsok"), label = "Validate args map code")),
+             fluidRow(column(4, actionButton(ns("argsok"), label = "Validate mapping")),
                       column(6, wellPanel(verbatimTextOutput(ns("argscheck")))))),
 
       column(6,
-             tags$h3("This is your args mapping"),
+             tags$h3("Arguments mapping preview"),
              wellPanel(class = "gp-well2",
                        verbatimTextOutput(ns("argtext")))))
     )

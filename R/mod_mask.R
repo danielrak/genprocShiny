@@ -13,12 +13,12 @@ mod_mask_ui <- function(id) {
     wellPanel(
       class = "gp-well1",
       fluidRow(
-
+        tags$h2("1 - Mask"),
       column(4,
-             fileInput(ns("maskfile"), tags$h3("Mask file")),
+             fileInput(ns("maskfile"), tags$h3("Upload mask")),
              wellPanel(verbatimTextOutput(ns("mskfilecheck")))),
       column(8,
-             tags$h3("Mask data"),
+             tags$h3("Mask preview"),
              wellPanel(class = "gp-well2",
                        DT::DTOutput(ns("maskdata"))),
              wellPanel(verbatimTextOutput(ns("mskdatacheck")))))

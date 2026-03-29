@@ -9,23 +9,28 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     fluidPage(
       tags$div(
-        class = "app-header",
-        tags$div(
-          class = "app-header-text",
-          tags$h1("Generalized Processing Helper with R"),
-          tags$h3("A minimal Shiny interface for genproc")
-        ),
-        tags$img(
-          src = "www/favicon.png",
-          class = "app-logo",
-          alt = "genproc logo"
-        )
-      ),
+        class = "page-container",
 
-      mod_mask_ui("mask_1"),
-      mod_func_code_ui("func_1"),
-      mod_gproc_ui("gproc_1"),
-      mod_log_ui("log_1")
+        tags$div(
+          class = "app-header",
+          tags$div(
+            class = "app-header-text",
+            tags$h1("Generalized Processing Helper with R"),
+            tags$h3("A minimal Shiny interface for genproc")
+          ),
+          tags$img(
+            src = "www/favicon.png",
+            class = "app-logo",
+            alt = "genproc logo"
+          )
+        ),
+
+        mod_mask_ui("mask_1"),
+        mod_func_code_ui("func_1"),
+        mod_gproc_ui("gproc_1"),
+        mod_log_ui("log_1")
+
+      )
     )
   )
 }

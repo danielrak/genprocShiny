@@ -12,13 +12,14 @@ mod_log_ui <- function(id) {
   tagList(
     wellPanel(class = "gp-well1",
     fluidRow(
+      tags$h2("4 - Results"),
       column(4,
-             tags$h3("Get logs"),
+             tags$h3("Execution logs"),
              actionButton(ns("getlogs"), label = "Get logs"),
-             tags$h5('Get logs console output'),
+             tags$h5('Get logs status'),
              wellPanel(verbatimTextOutput(ns("logmsg")))),
       column(8,
-             tags$h3("Process logs"),
+             tags$h3("Logs"),
              wellPanel(class = "gp-well2",
                        DT::DTOutput(ns("log"))))
     )
