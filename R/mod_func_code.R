@@ -17,7 +17,8 @@ mod_func_code_ui <- function(id) {
       column(6,
              textAreaInput(ns("funccode"), label = tags$h3("Your function code"),
                            width = "800px", height = "100px"),
-             actionButton(ns("funcok"), label = "Validate function code")),
+             fluidRow(column(4, actionButton(ns("funcok"), label = "Validate function code")),
+                      column(6, wellPanel(verbatimTextOutput(ns("funccheck")))))),
 
       column(6,
              tags$h3("This is your function"),
@@ -45,7 +46,12 @@ mod_func_code_server <- function(id){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
 
-    func_code <- eventReactive(input$funcok, eval_parse(text = input$funccode))
+    func_expr <- reactive(eval_parse(text = input$funccode))
+    func_code <- eventReactive(input$funcok, func_expr())
+    func_check <- eventReactive(input$funcok, validate_func(func_expr()))
+
+    output$funccheck <- renderPrint(func_check())
+
     output$functext <- renderPrint(func_code())
     args <- eventReactive(input$argsok, eval_parse(text = input$argmap))
     output$argtext <- renderPrint(args())
