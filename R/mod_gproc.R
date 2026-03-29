@@ -62,7 +62,6 @@ mod_gproc_server <- function(id,
         job <- genproc(mask = mask_data_return(),
                        func = func_code_return(),
                        args_mapping = args_mapping_return(),
-                       workers = 10,
                        proc_label = proc_label(),
                        logs_path = logs_path())
         job
