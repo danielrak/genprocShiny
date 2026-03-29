@@ -8,6 +8,7 @@ License: MIT + file LICENSE
 Imports: 
     callr,
     config,
+    DT,
     furrr,
     future,
     golem,

@@ -20,7 +20,7 @@ mod_mask_ui <- function(id) {
       column(8,
              tags$h3("Mask data"),
              wellPanel(class = "gp-well2",
-                       dataTableOutput(ns("maskdata"))),
+                       DT::DTOutput(ns("maskdata"))),
              wellPanel(verbatimTextOutput(ns("mskdatacheck")))))
       )
   )
@@ -43,7 +43,7 @@ mod_mask_server <- function(id){
       rio::import(mask_file()[["datapath"]])
       })
     output$mskdatacheck <- renderPrint({validate_mask_data(mask_data())})
-    output$maskdata <- renderDataTable({
+    output$maskdata <- DT::renderDT({
       mask_data()},
       options = list(scrioolY = "300px"))
 

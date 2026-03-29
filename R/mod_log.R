@@ -20,7 +20,7 @@ mod_log_ui <- function(id) {
       column(8,
              tags$h3("Process logs"),
              wellPanel(class = "gp-well2",
-                       dataTableOutput(ns("log"))))
+                       DT::DTOutput(ns("log"))))
     )
     )
   )
@@ -54,7 +54,7 @@ mod_log_server <- function(id, logs_path_return, proc_label_return) {
       }
     })
 
-    output$log <- renderDataTable({
+    output$log <- DT::renderDT({
       req(input$getlogs)
       logs_data()
     })
