@@ -37,7 +37,6 @@ mod_mask_server <- function(id){
       validate_mask_file(mask_file())
     })
 
-
     mask_data <- reactive({
       req(mask_file())
       rio::import(mask_file()[["datapath"]])})
