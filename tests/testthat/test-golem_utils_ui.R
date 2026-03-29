@@ -105,7 +105,7 @@ test_that("Test undisplay works", {
   expect_match(b_chr, ">")
   expect_match(b_chr, "go")
 
-  # b_undisplay <- undisplay(b)
+  b_undisplay <- undisplay(b)
   # expect_s3_class(b, "shiny.tag")
   # expect_equal(
   #   as.character(b_undisplay),
