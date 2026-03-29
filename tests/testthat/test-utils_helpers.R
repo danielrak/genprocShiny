@@ -6,8 +6,3 @@ test_that("eval_parse valids are consistent", {
   expect_equal(names(formals(eval_parsed)), names(formals(func)))
   expect_equal(body(eval_parsed), body(func))
 })
-
-test_that("validate_mask_file is consistent", {
-  file <- "./l1/not_a_csv.R"
-  expect_error(validate_mask_file(file), regexp = "Mask file must be a csv")
-})

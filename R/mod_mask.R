@@ -16,7 +16,7 @@ mod_mask_ui <- function(id) {
 
       column(6,
              fileInput(ns("maskfile"), tags$h3("Mask file")),
-             wellPanel(verbatimTextOutput("mskfilecheck"))),
+             wellPanel(verbatimTextOutput(ns("mskfilecheck")))),
       column(6,
              tags$h3("Mask data"),
              wellPanel(class = "gp-well2",
@@ -32,7 +32,11 @@ mod_mask_server <- function(id){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     mask_file <- reactive(input$maskfile)
-    output$mskfilecheck <- renderPrint({validate_mask_file(mask_file())})
+    output$mskfilecheck <- renderPrint({
+      req(mask_file())
+      validate(need(tools::file_ext(mask_file()) == "csv",
+                    "Mask file must be a csv"))
+    })
     mask_data <- reactive({
       req(mask_file())
       rio::import(mask_file()[["datapath"]])})
