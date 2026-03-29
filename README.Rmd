@@ -51,6 +51,14 @@ devtools::install_github("danielrak/genprocShiny")
 
 ---
 
+## A demo vignette
+
+```{r}
+
+```
+
+---
+
 ## Why?
 
 In many real-world workflows, processing starts from a single case:

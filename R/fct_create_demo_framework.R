@@ -4,8 +4,7 @@
 #'  (file conversion)
 #'
 #' @return Create, within the designated path: R datasets, mask, function and args mapping
-#'
-#' @noRd
+#' @export
 create_demo_framework <- function(demo_path) {
 
   instant <- format(Sys.time(), format = "%Y-%m-%d_%H-%M-%s")
