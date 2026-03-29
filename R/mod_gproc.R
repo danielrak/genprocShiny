@@ -12,7 +12,7 @@ mod_gproc_ui <- function(id) {
   ns <- NS(id)
   tagList(
 
-    wellPanel(style = "background-color: #ffffe0;",
+    wellPanel(class = "gp-well1",
     fluidRow(
       column(4,
              textInput(ns("proclabel"), label = tags$h3("Proc label"), value = "first")),

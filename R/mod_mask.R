@@ -11,14 +11,15 @@ mod_mask_ui <- function(id) {
   ns <- NS(id)
   tagList(
     wellPanel(
-      style = "background-color: #ffffe0;",
+      class = "gp-well1",
       fluidRow(
 
       column(6,
-             fileInput(ns("maskfile"), tags$h3("Mask file"))),
+             fileInput(ns("maskfile"), tags$h3("Mask file")),
+             wellPanel(verbatimTextOutput("mskfilecheck"))),
       column(6,
              tags$h3("Mask data"),
-             wellPanel(style = "height: 150px; overflow-y: auto;",
+             wellPanel(class = "gp-well2",
                        dataTableOutput(ns("maskdata")))))
       )
   )
@@ -31,6 +32,7 @@ mod_mask_server <- function(id){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     mask_file <- reactive(input$maskfile)
+    output$mskfilecheck <- renderPrint({validate_mask_file(mask_file())})
     mask_data <- reactive({
       req(mask_file())
       rio::import(mask_file()[["datapath"]])})

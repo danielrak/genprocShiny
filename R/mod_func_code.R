@@ -11,7 +11,7 @@ mod_func_code_ui <- function(id) {
   ns <- NS(id)
   tagList(
 
-    wellPanel(style = "background-color: #ffffe0;",
+    wellPanel(class = "gp-well1",
     fluidRow(
 
       column(6,
@@ -21,7 +21,7 @@ mod_func_code_ui <- function(id) {
 
       column(6,
              tags$h3("This is your function"),
-             wellPanel(style = "height: 100px; overflow-y: auto;",
+             wellPanel(class = "gp-well2",
                        verbatimTextOutput(ns("functext"))))),
 
     fluidRow(
@@ -32,7 +32,7 @@ mod_func_code_ui <- function(id) {
 
       column(6,
              tags$h3("This is your args mapping"),
-             wellPanel(style = "height: 100px; overflow-y: auto;",
+             wellPanel(class = "gp-well2",
                        verbatimTextOutput(ns("argtext")))))
     )
   )
@@ -45,9 +45,9 @@ mod_func_code_server <- function(id){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
 
-    func_code <- eventReactive(input$funcok, eval(parse(text = input$funccode)))
+    func_code <- eventReactive(input$funcok, eval_parse(text = input$funccode))
     output$functext <- renderPrint(func_code())
-    args <- eventReactive(input$argsok, eval(parse(text = input$argmap)))
+    args <- eventReactive(input$argsok, eval_parse(text = input$argmap))
     output$argtext <- renderPrint(args())
 
     list("func_code_return" = func_code,

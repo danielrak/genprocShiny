@@ -10,7 +10,7 @@
 mod_log_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    wellPanel(style = "background-color: #ffffe0;",
+    wellPanel(class = "gp-well1",
     fluidRow(
       column(6,
              tags$h3("Get logs"),
@@ -19,7 +19,7 @@ mod_log_ui <- function(id) {
              wellPanel(verbatimTextOutput(ns("logmsg")))),
       column(6,
              tags$h3("Process logs"),
-             wellPanel(style = "height: 150px; overflow-y: auto;",
+             wellPanel(class = "gp-well2",
                        dataTableOutput(ns("log"))))
     )
     )
