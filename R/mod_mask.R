@@ -14,10 +14,10 @@ mod_mask_ui <- function(id) {
       class = "gp-well1",
       fluidRow(
 
-      column(6,
+      column(4,
              fileInput(ns("maskfile"), tags$h3("Mask file")),
              wellPanel(verbatimTextOutput(ns("mskfilecheck")))),
-      column(6,
+      column(8,
              tags$h3("Mask data"),
              wellPanel(class = "gp-well2",
                        dataTableOutput(ns("maskdata")))))
