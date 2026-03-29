@@ -12,6 +12,7 @@ Imports:
     furrr,
     future,
     golem,
+    parallel,
     rio,
     shiny,
     shinyFiles,
