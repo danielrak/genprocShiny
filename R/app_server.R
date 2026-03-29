@@ -6,7 +6,7 @@
 #' @noRd
 app_server <- function(input, output, session) {
   mask_data_return <- mod_mask_server("mask_1")
-  func_mod_return  <- mod_func_code_server("func_1")
+  func_mod_return  <- mod_func_code_server("func_1", mask_data = mask_data_return)
 
   gproc_mod_return <- mod_gproc_server(
     "gproc_1",

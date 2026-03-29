@@ -29,7 +29,8 @@ mod_func_code_ui <- function(id) {
       column(6,
              textAreaInput(ns("argmap"), label = tags$h3("Args mapping"),
                            width = "800px", height = "100px"),
-             actionButton(ns("argsok"), label = "Validate args map code")),
+             fluidRow(column(4, actionButton(ns("argsok"), label = "Validate args map code")),
+                      column(6, wellPanel(verbatimTextOutput(ns("argscheck")))))),
 
       column(6,
              tags$h3("This is your args mapping"),
@@ -42,7 +43,7 @@ mod_func_code_ui <- function(id) {
 #' func_code Server Functions
 #'
 #' @noRd
-mod_func_code_server <- function(id){
+mod_func_code_server <- function(id, mask_data){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
 
@@ -51,13 +52,21 @@ mod_func_code_server <- function(id){
     func_check <- eventReactive(input$funcok, validate_func(func_expr()))
 
     output$funccheck <- renderPrint(func_check())
-
     output$functext <- renderPrint(func_code())
-    args <- eventReactive(input$argsok, eval_parse(text = input$argmap))
-    output$argtext <- renderPrint(args())
+
+    args_expr <- reactive(eval_parse(text = input$argmap))
+    args_code <- eventReactive(input$argsok, args_expr())
+    args_check <- eventReactive(
+      input$argsok,
+      {
+        validate_args(args_expr(),
+                      mask_data = mask_data(), func = func_code())})
+
+    output$argscheck <- renderPrint(args_check())
+    output$argtext <- renderPrint(args_code())
 
     list("func_code_return" = func_code,
-         "args_mapping_return" = args)
+         "args_mapping_return" = args_code)
 
   })
 }
