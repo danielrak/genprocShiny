@@ -6,26 +6,28 @@
 #' @noRd
 app_ui <- function(request) {
   tagList(
-    # Leave this function for adding external resources
     golem_add_external_resources(),
-    tags$div(
-      style = "text-align: center; margin-top: 10px; margin-bottom: 10px;",
-      tags$img(
-        src = "www/favicon.png",
-        height = "120px"
-      )
-    ),
-    # Your application UI logic
     fluidPage(
-      # golem::golem_welcome_page(), # Remove this line to start building your UI
+      tags$div(
+        class = "app-header",
+        tags$div(
+          class = "app-header-text",
+          tags$h1("Generalized Processing Helper with R"),
+          tags$h3("A minimal Shiny interface for genproc")
+        ),
+        tags$img(
+          src = "www/favicon.png",
+          class = "app-logo",
+          alt = "genproc logo"
+        )
+      ),
 
-      titlePanel("Generalized Processing Helper with R"),
       mod_mask_ui("mask_1"),
       mod_func_code_ui("func_1"),
       mod_gproc_ui("gproc_1"),
-      mod_log_ui("log_1"))
+      mod_log_ui("log_1")
+    )
   )
-
 }
 
 #' Add external Resources to the Application

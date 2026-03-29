@@ -6,3 +6,22 @@
   height: 150px;
   overflow-y: auto;
 }
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 0 12px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.app-header-text {
+  flex: 1;
+}
+.app-logo {
+  height: 110px;
+  width: auto;
+  display: block;
+}
