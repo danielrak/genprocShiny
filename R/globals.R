@@ -1,1 +1,1 @@
-globalVariables(c("input_file"))
+globalVariables(c("input_file", "data"))

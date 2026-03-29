@@ -15,7 +15,7 @@ create_demo_framework <- function(demo_path) {
   # R datasets
   datasets_folder <- file.path(demo_folder, "r_built_in_datasets")
   suppressWarnings({dir.create(datasets_folder)})
-  dlist <- datasets::data()$results[, "Item"]
+  dlist <- data()$results[, "Item"]
 
   purrr::map(dlist, \(x) {
     tryCatch({
