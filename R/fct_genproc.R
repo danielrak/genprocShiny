@@ -11,7 +11,9 @@
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-genproc <- function (mask, func, args_mapping, workers, proc_label, logs_path) {
+genproc <- function (mask, func, args_mapping,
+                     workers = parallel::detectCores() / 2,
+                     proc_label, logs_path) {
 
   stopifnot(is.data.frame(mask))
   stopifnot(is.function(func))
