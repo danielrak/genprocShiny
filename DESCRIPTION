@@ -8,14 +8,18 @@ License: MIT + file LICENSE
 Imports: 
     callr,
     config,
+    dplyr,
     DT,
     furrr,
     future,
     golem,
     parallel,
+    purrr,
+    readr,
     rio,
     shiny,
     shinyFiles,
+    stringr,
     tools
 Suggests: 
     knitr,
