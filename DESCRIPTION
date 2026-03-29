@@ -8,6 +8,7 @@ License: MIT + file LICENSE
 Imports: 
     callr,
     config,
+    datasets,
     dplyr,
     DT,
     furrr,
@@ -20,7 +21,8 @@ Imports:
     shiny,
     shinyFiles,
     stringr,
-    tools
+    tools,
+    utils
 Suggests: 
     knitr,
     rmarkdown,

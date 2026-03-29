@@ -15,7 +15,7 @@ create_demo_framework <- function(demo_path) {
   # R datasets
   datasets_folder <- file.path(demo_folder, "r_built_in_datasets")
   suppressWarnings({dir.create(datasets_folder)})
-  dlist <- data()$results[, "Item"]
+  dlist <- datasets::data()$results[, "Item"]
 
   purrr::map(dlist, \(x) {
     tryCatch({
@@ -41,7 +41,7 @@ create_demo_framework <- function(demo_path) {
     output_file = stringr::str_replace(input_file, "\\.rds", ".csv"))
 
   readr::write_csv(lfiles_df, file.path(mask_folder, "mask.csv"))
-  write.table(lfiles_df, file.path(mask_folder, "mask.txt"))
+  utils::write.table(lfiles_df, file.path(mask_folder, "mask.txt"))
 
   # func
   func_folder <- file.path(demo_folder, "func")
