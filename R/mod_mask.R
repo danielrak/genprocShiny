@@ -32,11 +32,17 @@ mod_mask_server <- function(id){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     mask_file <- reactive(input$maskfile)
+    # output$mskfilecheck <- renderPrint({
+    #   req(mask_file())
+    #   validate(need(tools::file_ext(mask_file()) == "csv",
+    #                 "Mask file must be a csv"))
+    # })
     output$mskfilecheck <- renderPrint({
       req(mask_file())
-      validate(need(tools::file_ext(mask_file()) == "csv",
-                    "Mask file must be a csv"))
+      validate_mask_file(mask_file())
     })
+
+
     mask_data <- reactive({
       req(mask_file())
       rio::import(mask_file()[["datapath"]])})

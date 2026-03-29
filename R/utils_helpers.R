@@ -11,3 +11,18 @@ eval_parse <- function (text) {
   eval(parse(text = text))
 }
 
+#' Validate mask file
+#'
+#' @description Validate mask file
+#'
+#' @return User feedback
+#' @param mask_file Mask file path
+#'
+#' @noRd
+validate_mask_file <- function (mask_file) {
+
+  file <- paste0(mask_file, collapse = "/")
+  ext <- tools::file_ext(file)
+  if (! ext == "csv") {stop ("Mask file must be a csv")}
+  else {"Mask file is valid"}
+}
