@@ -46,7 +46,7 @@ This is the Shiny implementation inherent to the project.
 You can install the development version with:
 
 ```{r, eval = FALSE}
-devtools::install_github("danielrak/genproc")
+devtools::install_github("danielrak/genprocShiny")
 ```
 
 ---
