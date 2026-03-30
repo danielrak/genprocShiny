@@ -52,7 +52,7 @@ usethis::use_test("app")
 # Documentation
 
 ## Vignette ----
-usethis::use_vignette("genprocpoc")
+usethis::use_vignette("genprocShiny")
 devtools::build_vignettes()
 
 ## Code Coverage----
