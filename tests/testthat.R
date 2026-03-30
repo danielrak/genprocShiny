@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(genprocpoc)
+library(genprocShiny)
 
-test_check("genprocpoc")
+test_check("genprocShiny")
