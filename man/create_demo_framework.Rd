@@ -6,6 +6,9 @@
 \usage{
 create_demo_framework(demo_path)
 }
+\arguments{
+\item{demo_path}{Folder path in which you want to create the demo elements. Those will be encapsulated in an unique folder (in demo_path)}
+}
 \value{
 Create, within the designated path: R datasets, mask, function and args mapping
 }
