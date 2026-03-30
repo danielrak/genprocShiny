@@ -3,6 +3,7 @@
 #' @description Given a path, create the necessary framework for PoC demo
 #'  (file conversion)
 #'
+#' @param demo_path Folder path in which you want to create the demo elements. Those will be encapsulated in an unique folder (in demo_path)
 #' @return Create, within the designated path: R datasets, mask, function and args mapping
 #' @export
 create_demo_framework <- function(demo_path) {
