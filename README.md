@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/danielrak/genprocShiny/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/danielrak/genprocShiny/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## About
@@ -15,7 +16,7 @@ This README was generated on:
 
 ``` r
 Sys.time()
-#> [1] "2026-03-30 19:51:33 CEST"
+#> [1] "2026-03-30 20:16:54 CEST"
 ```
 
 ------------------------------------------------------------------------
