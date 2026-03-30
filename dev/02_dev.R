@@ -30,6 +30,7 @@ golem::add_module(name = "log", with_test = TRUE) # Name of the module
 golem::add_fct("add_trycatch_logrow", with_test = TRUE)
 golem::add_fct("rename_function_params", with_test = TRUE)
 golem::add_fct("create_demo_framework", with_test = FALSE)
+golem::add_fct("from_function_to_mask", with_test = TRUE)
 golem::add_fct("genproc", with_test = TRUE)
 golem::add_utils("helpers", with_test = TRUE)
 

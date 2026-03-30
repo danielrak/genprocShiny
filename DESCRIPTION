@@ -3,7 +3,9 @@ Title: Generalized Processing Helper with R
 Version: 0.0.0.9000
 Authors@R: 
     person("Daniel", "RAKOTOMALALA", , "rakdanielh@gmail.com", role = c("aut", "cre"))
-Description: PoC Shiny app / Package that provides tools for applying a user-defined function over a parameterized input table with logging and parallel execution.
+Description: PoC Shiny app / Package that provides tools for applying a
+    user-defined function over a parameterized input table with logging
+    and parallel execution.
 License: MIT + file LICENSE
 Imports: 
     callr,
