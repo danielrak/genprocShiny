@@ -8,7 +8,7 @@
 create_demo_framework <- function(demo_path) {
 
   instant <- format(Sys.time(), format = "%Y-%m-%d_%H-%M-%s")
-  demo_folder <- file.path(demo_path, paste0("demo_genprocPoc - ", instant))
+  demo_folder <- file.path(demo_path, paste0("demo_genprocShiny - ", instant))
   suppressWarnings({dir.create(demo_folder)})
 
   # R datasets
