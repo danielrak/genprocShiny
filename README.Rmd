@@ -53,8 +53,8 @@ devtools::install_github("danielrak/genprocShiny")
 
 ## A demo vignette
 
-```{r}
-
+```{r, eval = FALSE}
+vignette("genprocShiny", "genprocShiny")
 ```
 
 ---
