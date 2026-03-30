@@ -19,6 +19,7 @@ Imports:
     purrr,
     readr,
     rio,
+    rlang,
     shiny,
     shinyFiles,
     stringr,
