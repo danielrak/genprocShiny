@@ -1,5 +1,8 @@
 test_that("from_example_to_function is consistent", {
 
+  library(purrr)
+  library(dplyr)
+
   # most arbitrary expr possible
   expect_equal(from_example_to_function(expression({
     # intentionally very long and nonsense function
@@ -36,8 +39,6 @@ test_that("from_example_to_function is consistent", {
                {
                  map(c(param_1, param_2), get) %>% map(mutate_all, as.character)
                })
-  library(purrr)
-  library(dplyr)
   expect_equal(myfunc_1(param_1 = "airquality", param_2 = "anscombe"),
                # this is a dput() output:
                list(structure(list(
