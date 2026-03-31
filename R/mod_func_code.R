@@ -15,28 +15,48 @@ mod_func_code_ui <- function(id) {
     fluidRow(
 
       tags$h2("2 - Function"),
-      column(6,
-             textAreaInput(ns("funccode"), label = tags$h3("Write your function code"),
-                           width = "800px", height = "100px"),
-             fluidRow(column(4, actionButton(ns("funcok"), label = "Validate function")),
-                      column(6, wellPanel(verbatimTextOutput(ns("funccheck")))))),
 
-      column(6,
-             tags$h3("Function preview"),
-             wellPanel(class = "gp-well2",
-                       verbatimTextOutput(ns("functext"))))),
+      # function writing
+      tabsetPanel(
+        tabPanel("From example to function",
+                 column(6,
+                        textAreaInput(ns("egcode"), label = tags$h3("Write your example code"),
+                                         width = "800px", height = "100px"),
+                        fluidRow(column(4, actionButton(ns("egok"), label = "Validate example")),
+                                 column(6, wellPanel(verbatimTextOutput(ns("egcheck")))))),
+                 column(6,
+                        tags$h3("Function preview (from example)"),
+                        wellPanel(class = "gp-well2",
+                                  verbatimTextOutput(ns("egfunctext"))))),
+        tabPanel(
+          "Write function directly",
+          column(6,
+                 textAreaInput(ns("funccode"), label = tags$h3("Write your function code"),
+                               width = "800px", height = "100px"),
+                 fluidRow(column(4, actionButton(ns("funcok"), label = "Validate function")),
+                          column(6, wellPanel(verbatimTextOutput(ns("funccheck")))))),
 
-    fluidRow(
-      column(6,
-             textAreaInput(ns("argmap"), label = tags$h3("Map your function arguments to mask names"),
-                           width = "800px", height = "100px"),
-             fluidRow(column(4, actionButton(ns("argsok"), label = "Validate mapping")),
-                      column(6, wellPanel(verbatimTextOutput(ns("argscheck")))))),
+          column(6,
+                 tags$h3("Function preview"),
+                 wellPanel(class = "gp-well2",
+                           verbatimTextOutput(ns("functext"))))),
 
-      column(6,
-             tags$h3("Arguments mapping preview"),
-             wellPanel(class = "gp-well2",
-                       verbatimTextOutput(ns("argtext")))))
+      tabPanel("Arguments mapping",
+               # arguments mapping
+               fluidRow(
+                 column(6,
+                        textAreaInput(ns("argmap"), label = tags$h3("Map your function arguments to mask names"),
+                                      width = "800px", height = "100px"),
+                        fluidRow(column(4, actionButton(ns("argsok"), label = "Validate mapping")),
+                                 column(6, wellPanel(verbatimTextOutput(ns("argscheck")))))),
+
+                 column(6,
+                        tags$h3("Arguments mapping preview"),
+                        wellPanel(class = "gp-well2",
+                                  verbatimTextOutput(ns("argtext"))))))
+
+    ))
+
     )
   )
 }
@@ -65,6 +85,13 @@ mod_func_code_server <- function(id, mask_data){
 
     output$argscheck <- renderPrint(args_check())
     output$argtext <- renderPrint(args_code())
+
+    # from example to function section
+    eg_expr <- reactive(parse(text = input$egcode))
+    eg_to_func <- eventReactive(input$egok, from_example_to_function(eg_expr()))
+
+    output$egfunctext <- renderPrint(eg_to_func())
+
 
     list("func_code_return" = func_code,
          "args_mapping_return" = args_code)
