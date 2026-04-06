@@ -18,28 +18,22 @@ mod_func_code_ui <- function(id) {
 
       # function writing
       tabsetPanel(
-        tabPanel("From example to function",
+        tabPanel("Build function",
                  column(6,
                         textAreaInput(ns("egcode"), label = tags$h3("Write your example code"),
                                          width = "800px", height = "100px"),
                         fluidRow(column(4, actionButton(ns("egok"), label = "Validate example")),
-                                 column(6, wellPanel(verbatimTextOutput(ns("egcheck")))))),
-                 column(6,
-                        tags$h3("Function preview (from example)"),
-                        wellPanel(class = "gp-well2",
-                                  verbatimTextOutput(ns("egfunctext"))))),
-        tabPanel(
-          "Write function directly",
-          column(6,
-                 textAreaInput(ns("funccode"), label = tags$h3("Write your function code"),
-                               width = "800px", height = "100px"),
-                 fluidRow(column(4, actionButton(ns("funcok"), label = "Validate function")),
-                          column(6, wellPanel(verbatimTextOutput(ns("funccheck")))))),
+                                 column(6, wellPanel(verbatimTextOutput(ns("egcheck"))))),
+                        textAreaInput(ns("funccode"), label = tags$h3("Write your function code"),
+                                      width = "800px", height = "100px"),
+                        fluidRow(column(4, actionButton(ns("funcok"), label = "Validate function")),
+                                 column(6, wellPanel(verbatimTextOutput(ns("funccheck")))))),
 
-          column(6,
-                 tags$h3("Function preview"),
-                 wellPanel(class = "gp-well2",
-                           verbatimTextOutput(ns("functext"))))),
+                 column(6,
+                        tags$h3("Function preview"),
+                        wellPanel(class = "gp-well2",
+                                  verbatimTextOutput(ns("functext"))))
+                 ),
 
       tabPanel("Arguments mapping",
                # arguments mapping
