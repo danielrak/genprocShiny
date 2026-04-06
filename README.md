@@ -16,7 +16,7 @@ This README was generated on:
 
 ``` r
 Sys.time()
-#> [1] "2026-03-30 20:16:54 CEST"
+#> [1] "2026-04-06 21:50:12 CEST"
 ```
 
 ------------------------------------------------------------------------
@@ -38,7 +38,7 @@ This is the Shiny implementation inherent to the project.
 You can install the development version with:
 
 ``` r
-devtools::install_github("danielrak/genprocShiny")
+devtools::install_github("danielrak/genprocShiny", build_vignettes = TRUE)
 ```
 
 ------------------------------------------------------------------------
