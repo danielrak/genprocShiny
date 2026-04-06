@@ -1,92 +1,185 @@
 ---
-title: "genproc: Shiny Proof of Concept"
+title: "Getting started with genprocShiny"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{genproc: Shiny Proof of Concept}
+  %\VignetteIndexEntry{Getting started with genprocShiny}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = FALSE
+  comment = "#>"
 )
-library(genprocShiny)
-```
-  
-# Overview
-
-`genproc` provides a minimal Shiny interface to run batch processes driven by a mask (a data frame where each row defines one execution case).
-
-The application is structured into four steps:
-
-1. Upload a mask
-2. Define a function
-3. Configure and launch the process
-4. Inspect logs
-
-The goal of this vignette is to demonstrate how to use the Shiny application through a reproducible demo workflow.
-
-# Demo and how to use
-
-To get started, generate a ready-to-use demo framework: 
-
-```{r}
-create_demo_framework("path/to/demo")
 ```
 
-This creates the following elements within `"path/to/demo"`, which we'll refer as `"./"` from now on: 
+## Overview
 
-- a mask file (`"./mask/mask.csv"`)
-- a demo function and argument mapping (`"./func/func_and_args_mapping.R"`)
-- input datasets (R built-in ones, `"./r_built_in_datasets/"`)
-- an empty output directory (`"./out/"`)
+`genprocShiny` is a proof-of-concept Shiny app for scaling a repeated processing task from one case to many.
 
-Then, launch the application with: 
+The core idea is simple:
 
-```{r}
+- define the cases to run in a **mask**;
+- define the transformation as a **function**;
+- map the function arguments to the mask columns;
+- run the process and inspect the logs.
+
+The current app is intentionally minimal and is organized around four sections:
+
+1. Mask
+2. Function
+3. Execution
+4. Results
+
+A practical way to think about the app is as a helper for **input/output tasks at scale**: for example, converting many files, exporting many objects, or applying the same transformation across a table of input/output definitions.
+
+## Launch the app
+
+```{r eval = FALSE}
 run_app()
 ```
 
-The interface contains four sections: 
+## Optional: create a demo framework
 
-- 1 - Mask
-- 2 - Function
-- 3 - Execution
-- 4 - Results
+The package provides a helper to create a demo folder containing example datasets, a mask, an output directory, and a function/mapping example.
 
-## Step 1 - Upload the mask
+```{r eval = FALSE}
+create_demo_framework("path/to/your/folder")
+```
 
-Upload the file at `"./mask/mask.csv"`. 
-  
-The application then validates the file format, loads it as a data frame and displays a preview.  
-  
-Each row of the mask represents one execution case. 
+This helper is useful for quickly creating material to test the app with a concrete batch-processing scenario.
 
-## Step 2 - Define function (and its arguments mapping with the mask names)
+## Step 1 - Upload a mask
 
-Open this file: `"./func/func_and_args_mapping.R"`. 
-  
-Copy the function part into the corresponding area in the app and click *Validate function*. 
-  
-Similarly, get the arguments mapping part in the app and click *Validate mapping*.   
-  
-The application ensures that mapping names match function arguments and mapping values match mask column names. 
-  
-## Step 3 - Configure and run  
+In the **Mask** section, upload a `.csv` file describing the cases to run.
 
-- Set a process label  
-- Select a directory for upcoming logs (e.g. at `"./out/"`)
-- Click *Run*  
-  
-The application will adapt the function to the mask, wrap execution with error handling and execute the tasks in parallel. For your information, the number of workers is set by default to `parallel::detectCores() / 2` (half of your available cores).  
-  
-## Step 4 - Retrieve logs
+Each row of the mask corresponds to one execution case.
 
-Click *Get logs*
+For a file-processing use case, the mask will often contain columns such as:
 
-The application reads the log file named `"[proc_label].rds"` within the previously defined logs directory, and displays it in a table. Its structure is basically that of the mask + a `success` flag and an `error message` if applicable. 
- 
-  
+- `input_dir`
+- `input_file`
+- `output_dir`
+- `output_file`
+
+The app displays a preview of the uploaded mask and performs basic validation.
+
+## Step 2 - Build the function
+
+The **Function** section supports two entry points:
+
+1. **Write a function directly**
+2. **Generate a function from example code**
+
+Both routes feed the same function preview area.
+
+### Option A - Write the function directly
+
+You can write a standard R function in the function code box and validate it.
+
+For example:
+
+```r
+function(input_dir, input_file, output_dir, output_file) {
+  data <- readRDS(file.path(input_dir, input_file))
+  rio::export(data, file.path(output_dir, output_file))
+}
+```
+
+This route is the simplest one for the demo framework created by `create_demo_framework()` because the demo mask already separates directories and filenames.
+
+### Option B - Build the function from example code
+
+You can also start from a concrete code example and let the app convert it into a reusable function.
+
+For example, suppose you already know how to run the transformation once:
+
+```r
+{
+  data <- readRDS("/some/path/iris.rds")
+  rio::export(data, "/some/out/iris.csv")
+}
+```
+
+Paste this code in the **Write your example code** box, then click **Validate example**.
+
+The app will:
+
+- turn the example into a function;
+- display that function in the shared function preview area;
+- copy the generated function into the function code box so you can edit it.
+
+This is useful when the user starts from a working script rather than from a formalized function.
+
+### Programmatic use
+
+The same feature is also available directly in R through `from_example_to_function()`.
+
+```{r eval = FALSE}
+expr <- expression({
+  data <- readRDS("/some/path/iris.rds")
+  rio::export(data, "/some/out/iris.csv")
+})
+
+from_example_to_function(expr)
+```
+
+In the current proof of concept, this function is especially helpful as a bridge between ad hoc code and reusable processing logic.
+
+## Step 3 - Map the function arguments to the mask
+
+In the **Arguments mapping** tab, provide a named character vector that links function arguments to mask column names.
+
+For example:
+
+```r
+c(
+  "input_dir" = "input_dir",
+  "input_file" = "input_file",
+  "output_dir" = "output_dir",
+  "output_file" = "output_file"
+)
+```
+
+The names correspond to the function arguments, and the values correspond to the mask columns.
+
+The app validates that:
+
+- the mapping is a named character vector;
+- the values exist in the mask;
+- the names match the function arguments.
+
+## Step 4 - Run the process
+
+In the **Execution** section:
+
+- choose a process label;
+- select a logs directory;
+- click **Run**.
+
+The app then launches the processing job and saves log files to the selected location.
+
+## Step 5 - Retrieve the logs
+
+In the **Results** section, click **Get logs** to load the resulting log table.
+
+The current proof of concept focuses on row-wise success/error feedback so the user can inspect which cases succeeded and which failed.
+
+## What this proof of concept already shows
+
+Even in its minimal form, the app already demonstrates a useful workflow:
+
+- explicit task definition through a mask;
+- function creation from either direct coding or a worked example;
+- argument mapping between function and mask;
+- batch execution;
+- per-case logs.
+
+This makes the project easier to understand when presented through a concrete use case such as file conversion or repeated input/output processing.
+
+## Current limitations and direction
+
+`genprocShiny` is still a proof of concept.
+
+The current app is intentionally lightweight and keeps the workflow simple. Future improvements may include richer validation, more ergonomic code editing, stronger live monitoring, and more advanced handling of failed cases and reruns.
