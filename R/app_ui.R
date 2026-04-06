@@ -25,17 +25,13 @@ app_ui <- function(request) {
             alt = "genproc logo"
           )
         ),
-        tabsetPanel(
-          tabPanel("Main",
 
-                   mod_mask_ui("mask_1"),
-                   mod_func_code_ui("func_1"),
-                   mod_gproc_ui("gproc_1"),
-                   mod_log_ui("log_1")
+        mod_mask_ui("mask_1"),
+        mod_func_code_ui("func_1"),
+        mod_gproc_ui("gproc_1"),
+        mod_log_ui("log_1")
 
-          ),
-          tabPanel("Utils")
-        )
+
       )
     )
   )
