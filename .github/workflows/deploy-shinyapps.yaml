@@ -55,7 +55,11 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         if: steps.secrets.outputs.configured == 'true'
         with:
-          extra-packages: any::rsconnect, any::pkgload
+          # cpp11 and progress are build-time / indirect dependencies of
+          # readr, readxl, haven and vroom that pak does not install with
+          # binaries, but renv's pre-flight validation in rsconnect requires
+          # them to be present.
+          extra-packages: any::rsconnect, any::pkgload, any::cpp11, any::progress
 
       - name: Deploy to shinyapps.io
         if: steps.secrets.outputs.configured == 'true'
