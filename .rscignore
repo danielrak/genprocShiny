@@ -1,0 +1,16 @@
+.github
+.gitignore
+.Rbuildignore
+.Rhistory
+.here
+.rscignore
+CODE_OF_CONDUCT.md
+LICENSE.md
+NEWS.md
+README.Rmd
+README.md
+dev
+genprocShiny.Rproj
+man
+tests
+vignettes

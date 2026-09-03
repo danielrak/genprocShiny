@@ -11,3 +11,6 @@ $run_dev.*
 ^doc$
 ^Meta$
 ^\.github$
+^app\.R$
+^\.rscignore$
+^rsconnect$
