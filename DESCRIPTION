@@ -20,6 +20,8 @@ Imports:
     stringr,
     tools,
     utils
+Remotes:
+    danielrak/genproc
 Suggests: 
     knitr,
     rmarkdown,
