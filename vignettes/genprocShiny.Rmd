@@ -152,11 +152,25 @@ The app validates that:
 
 ## Step 4 - Run the process
 
-In the **Execution** section, choose sequential or bounded parallel execution and click **Run**. The default non-blocking mode keeps the Shiny session responsive while the app tracks the job state.
+In the **Execution** section, click **Run**.
 
-## Step 5 - Retrieve the logs
+By default the cases run sequentially and the job is **non-blocking**: the Shiny session stays responsive while the app polls the job state and collects the result once it finishes. Tick **Run cases in parallel** and choose a bounded number of workers to distribute the cases; for short workloads the worker start-up usually costs more than it saves.
 
-The **Results** section displays the status and structured log from the in-memory `genproc_result`. The result is never rediscovered through a process label or filesystem path.
+The execution status moves through `ready`, `running`, then `done`, or `error` when the job itself could not run. Clicking **Run** while a job is running does nothing. A running job does not survive closing the app or the R session.
+
+## Step 5 - Inspect the results
+
+The **Results** section presents the in-memory `genproc_result` returned by the `genproc` package. Nothing is looked up on disk.
+
+- **Run status** and an **Overview** with the number of successful and failed cases, the execution mode and the total duration.
+- **Log**: one row per case with its parameters, success flag, error message, traceback and duration.
+- **Errors**: the failed cases only. Selecting a row shows the traceback captured for that case.
+- **Summary**: the `summary()` of the result, including the most frequent error messages.
+- **Reproducibility**: when the run started, the R version, platform and execution mode, plus the versions of the packages loaded during the run.
+
+A failing case never stops the run: the other cases still execute and the log records both outcomes.
+
+If you change the mask, the function or the mapping after a run, the status becomes `stale` so that old logs are never mistaken for results of the current inputs. Run again to refresh them.
 
 ## What this proof of concept already shows
 
@@ -165,8 +179,8 @@ Even in its minimal form, the app already demonstrates a useful workflow:
 - explicit task definition through a mask;
 - function creation from either direct coding or a worked example;
 - argument mapping between function and mask;
-- batch execution;
-- per-case logs.
+- non-blocking batch execution, sequential or parallel, delegated to the `genproc` package;
+- per-case logs, error tracebacks and reproducibility metadata.
 
 This makes the project easier to understand when presented through a concrete use case such as file conversion or repeated input/output processing.
 
@@ -174,4 +188,4 @@ This makes the project easier to understand when presented through a concrete us
 
 `genprocShiny` is still a proof of concept.
 
-The current app is intentionally lightweight and keeps the workflow simple. Future improvements may include richer validation, more ergonomic code editing, stronger live monitoring, and more advanced handling of failed cases and reruns.
+The current app is intentionally lightweight and keeps the workflow simple. User-entered code is parsed and evaluated locally, in the R session running the app; the app is meant for local, single-user use. Future improvements may include more ergonomic code editing, live per-case progress, saving results under a unique run identifier, and rerunning failed cases.
