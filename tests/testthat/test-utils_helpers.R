@@ -46,11 +46,11 @@ test_that("validate_args is consistent", {
 
   object3 <- c("x" = "param1", "y" = "p2")
   expect_error(validate_args(object3, mask, func),
-               "These values doest not match mask names")
+               "These values do not match mask names")
 
   object4 <- c("X" = "p1", "y" = "p2")
   expect_error(validate_args(object4, mask, func),
-               "These names does not match function arguments")
+               "These names do not match function arguments")
 
   object5 <- c("x" = "p1", "y" = "p2")
   expect_equal(validate_args(object5, mask, func),
