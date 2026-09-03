@@ -43,7 +43,7 @@ test_that("reproducibility metadata is tabulated", {
   fields <- reproducibility_fields(result)
   expect_equal(fields$value[fields$field == "Execution mode"], "sequential")
   expect_equal(fields$value[fields$field == "Mask rows"], "3")
-  expect_match(fields$value[fields$field == "R version"], "^R version")
+  expect_equal(fields$value[fields$field == "R version"], R.version.string)
 
   packages <- reproducibility_packages(result)
   expect_named(packages, c("package", "version"))

@@ -111,6 +111,8 @@ test_that("a blocking run is materialised immediately through the real genproc A
 test_that("a non-blocking run is polled until done through the real genproc API", {
   skip_if_not_installed("genproc", minimum_version = "0.2.0")
   inputs <- execution_inputs()
+  # One slow case so the job is still running when the launch checks its status
+  inputs$function_input$fun <- shiny::reactive(function(x) { Sys.sleep(1.5); x })
   shiny::testServer(mod_gproc_server, args = list(
     mask = inputs$mask, function_input = inputs$function_input, poll_ms = 100L
   ), {
