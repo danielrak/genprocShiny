@@ -7,6 +7,8 @@ Description: PoC Shiny app / Package that provides tools for applying a
     user-defined function over a parameterized input table with logging
     and parallel execution.
 License: MIT + file LICENSE
+Depends: 
+    R (>= 4.1.0)
 Imports: 
     config,
     dplyr,

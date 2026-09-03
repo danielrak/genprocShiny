@@ -1,7 +1,7 @@
 # eg
 {
 data <- readr::read_rds(file.path("./r_built_in_datasets", "airquality.rds"))
-data %>% readr::write_csv(file.path("./out", "airquality.csv"))
+data |> readr::write_csv(file.path("./out", "airquality.csv"))
 }
 
 # func
@@ -9,7 +9,7 @@ function (param_1 = "./r_built_in_datasets", param_2 = "airquality.rds",
           param_3 = "./out", param_4 = "airquality.csv")
 {
   data <- readr::read_rds(file.path(param_1, param_2))
-  data %>% readr::write_csv(file.path(param_3, param_4))
+  data |> readr::write_csv(file.path(param_3, param_4))
 }
 
 # args map

@@ -16,7 +16,7 @@ This README was generated on:
 
 ``` r
 Sys.time()
-#> [1] "2026-04-06 22:04:31 CEST"
+#> [1] "2026-09-03 18:06:56 UTC"
 ```
 
 ------------------------------------------------------------------------
@@ -73,8 +73,10 @@ logic of a batch run:
 - **upload a mask** that declares the cases to run;
 - **build a function from example code** or write the function directly;
 - **map function arguments to mask column names**;
-- **launch execution**;
-- **retrieve row-wise logs** describing success or failure.
+- **launch execution** without blocking the interface, sequentially or
+  in parallel;
+- **inspect the result**: row-wise logs, error tracebacks, summary and
+  reproducibility metadata.
 
 This means the app is not just about iterating over rows. It is about
 making a transformation **operational**:
@@ -97,8 +99,13 @@ execution framework.
 - a **function-to-mask interface** through argument mapping;
 - a **from-example-to-function** step for users who can demonstrate one
   task but do not want to parameterize everything by hand;
-- **row-wise success/error logging**;
-- **background execution** and parallel processing support.
+- **row-wise success/error logging** with tracebacks;
+- **non-blocking execution** and parallel processing support.
+
+The execution engine is the
+[`genproc`](https://CRAN.R-project.org/package=genproc) package:
+`genprocShiny` is a thin interface over its public API and does not
+reimplement iteration, logging or reproducibility capture.
 
 The goal is therefore not only to “map a function” but to help turn one
 transformation into a **repeatable batch process with observable
@@ -113,6 +120,9 @@ You can install the development version with:
 ``` r
 devtools::install_github("danielrak/genprocShiny", build_vignettes = TRUE)
 ```
+
+This installs the `genproc` package (\>= 0.2.0) from CRAN as a
+dependency.
 
 ------------------------------------------------------------------------
 
@@ -152,7 +162,7 @@ A typical workflow is:
 2.  define the transformation function;
 3.  map the function arguments to the mask column names;
 4.  run the process;
-5.  inspect the resulting logs.
+5.  inspect the resulting logs, errors and summary.
 
 This is exactly the kind of use case the current PoC is designed to make
 more explicit and more reusable.
@@ -192,7 +202,7 @@ This reflects the intended workflow of the PoC:
 - declare the tasks;
 - validate the transformation;
 - run the batch process;
-- inspect the logs.
+- inspect the result.
 
 ------------------------------------------------------------------------
 
@@ -206,8 +216,8 @@ core workflow tangible:
 - a task table;
 - a reusable function;
 - an explicit interface between both;
-- scalable execution;
-- and structured logs.
+- non-blocking, optionally parallel execution through `genproc`;
+- and structured logs with tracebacks and reproducibility metadata.
 
 That scope is narrower and more concrete than a general-purpose workflow
 platform, and that is deliberate.
@@ -219,8 +229,9 @@ platform, and that is deliberate.
 Planned improvements include:
 
 - stronger validation of user inputs and code;
-- more informative logs, including richer execution metadata;
-- better live monitoring during execution;
+- live per-case progress during execution;
+- saving results under a unique run identifier and rerunning failed
+  cases;
 - easier editing and testing of functions and mappings;
 - improved user experience in the Shiny interface;
 - more robust support for broader classes of processing tasks.
