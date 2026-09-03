@@ -39,6 +39,22 @@ mod_gproc_server <- function(id, mask, function_input,
       mapping = function_input$mapping()
     ))
 
+    # Collect a terminal job exactly once and derive the run state from it.
+    materialise <- function(job) {
+      values$materialised <- TRUE
+      result <- await_job(job)
+      values$result <- result
+      if (identical(result$status, "error")) {
+        # Wrapper-level failure: the job itself died, no per-case log exists.
+        values$state <- "error"
+        values$error <- result$error_message %||%
+          "The genproc job failed before producing a result"
+      } else {
+        values$state <- if (identical(current_snapshot(), values$snapshot)) "done" else "stale"
+        values$stale <- values$state == "stale"
+      }
+    }
+
     observe({
       ready <- inputs_ready()
       snapshot <- if (ready) current_snapshot() else NULL
@@ -75,13 +91,10 @@ mod_gproc_server <- function(id, mask, function_input,
           use_parallel = isTRUE(input$parallel), workers = input$workers %||% 1L,
           nonblocking = !identical(input$nonblocking, FALSE)
         )
-        if (inherits(started, "genproc_result")) {
-          values$result <- started
-          values$materialised <- TRUE
-          values$state <- "done"
-        } else {
-          values$job <- started
-        }
+        # A non-blocking job and a finished result share the `genproc_result`
+        # class: only the job status tells them apart.
+        values$job <- started
+        if (job_is_terminal(status_job(started))) materialise(started)
       }, error = function(e) {
         values$state <- "error"
         values$error <- conditionMessage(e)
@@ -92,12 +105,8 @@ mod_gproc_server <- function(id, mask, function_input,
       req(identical(values$state, "running"), !is.null(values$job))
       invalidateLater(poll_ms, session)
       tryCatch({
-        status <- status_job(values$job)
-        if (job_is_terminal(status) && !values$materialised) {
-          values$materialised <- TRUE
-          values$result <- await_job(values$job)
-          values$state <- if (identical(current_snapshot(), values$snapshot)) "done" else "stale"
-          values$stale <- values$state == "stale"
+        if (job_is_terminal(status_job(values$job)) && !values$materialised) {
+          materialise(values$job)
         }
       }, error = function(e) {
         values$state <- "error"

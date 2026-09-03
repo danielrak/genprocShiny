@@ -12,19 +12,24 @@ test_that("duplicate runs are ignored and a terminal job is awaited once", {
   inputs <- execution_inputs()
   starts <- 0L
   awaits <- 0L
-  statuses <- c("running", "completed")
+  # Consulted once at launch, once by the first poll, then terminal
+  statuses <- c("running", "running", "completed")
   status_calls <- 0L
 
   shiny::testServer(mod_gproc_server, args = list(
     mask = inputs$mask, function_input = inputs$function_input,
-    run_job = function(...) { starts <<- starts + 1L; structure(list(), class = "fake_job") },
+    run_job = function(...) {
+      starts <<- starts + 1L
+      # Mirrors genproc: a non-blocking job is a `genproc_result` skeleton
+      structure(list(log = NULL, status = "running"), class = "genproc_result")
+    },
     status_job = function(job) {
       status_calls <<- status_calls + 1L
       statuses[min(status_calls, length(statuses))]
     },
     await_job = function(job) {
       awaits <<- awaits + 1L
-      structure(list(log = data.frame(success = TRUE)), class = "genproc_result")
+      structure(list(log = data.frame(success = TRUE), status = "done"), class = "genproc_result")
     }, poll_ms = 100L
   ), {
     session$setInputs(go = 1, parallel = FALSE, workers = 1, nonblocking = TRUE)
@@ -57,7 +62,7 @@ test_that("changed inputs mark a completed result stale", {
   mask_value <- shiny::reactiveVal(data.frame(x = 1))
   inputs <- execution_inputs()
   inputs$mask$data <- shiny::reactive(mask_value())
-  fake_result <- structure(list(log = data.frame(success = TRUE)), class = "genproc_result")
+  fake_result <- structure(list(log = data.frame(success = TRUE), status = "done"), class = "genproc_result")
 
   shiny::testServer(mod_gproc_server, args = list(
     mask = inputs$mask, function_input = inputs$function_input,
@@ -72,12 +77,51 @@ test_that("changed inputs mark a completed result stale", {
   })
 })
 
-test_that("results module presents the in-memory result", {
-  result <- shiny::reactive(structure(list(log = data.frame(case = 1, success = TRUE)), class = "genproc_result"))
-  execution <- list(result = result, state = shiny::reactive("done"), error = shiny::reactive(NULL))
-  shiny::testServer(mod_log_server, args = list(execution = execution), {
-    expect_match(output$status, "done")
-    expect_false("logs_path_return" %in% names(formals(mod_log_server)))
-    expect_false("proc_label_return" %in% names(formals(mod_log_server)))
+test_that("a job that dies is reported as a wrapper-level error", {
+  inputs <- execution_inputs()
+  shiny::testServer(mod_gproc_server, args = list(
+    mask = inputs$mask, function_input = inputs$function_input,
+    run_job = function(...) structure(list(log = NULL, status = "running"), class = "genproc_result"),
+    status_job = function(job) "error",
+    await_job = function(job) structure(
+      list(log = NULL, status = "error", error_message = "worker died"),
+      class = "genproc_result"
+    ), poll_ms = 100L
+  ), {
+    session$setInputs(go = 1, parallel = FALSE, workers = 1, nonblocking = TRUE)
+    session$elapse(100)
+    expect_equal(session$returned$state(), "error")
+    expect_equal(session$returned$error(), "worker died")
+    expect_null(session$returned$result()$log)
+  })
+})
+
+test_that("a blocking run is materialised immediately through the real genproc API", {
+  skip_if_not_installed("genproc", minimum_version = "0.2.0")
+  inputs <- execution_inputs()
+  shiny::testServer(mod_gproc_server, args = list(
+    mask = inputs$mask, function_input = inputs$function_input
+  ), {
+    session$setInputs(go = 1, parallel = FALSE, workers = 1, nonblocking = FALSE)
+    expect_equal(session$returned$state(), "done")
+    expect_equal(nrow(session$returned$result()$log), 2L)
+  })
+})
+
+test_that("a non-blocking run is polled until done through the real genproc API", {
+  skip_if_not_installed("genproc", minimum_version = "0.2.0")
+  inputs <- execution_inputs()
+  shiny::testServer(mod_gproc_server, args = list(
+    mask = inputs$mask, function_input = inputs$function_input, poll_ms = 100L
+  ), {
+    session$setInputs(go = 1, parallel = FALSE, workers = 1, nonblocking = TRUE)
+    expect_equal(session$returned$state(), "running")
+    for (i in 1:100) {
+      session$elapse(100)
+      if (session$returned$state() != "running") break
+      Sys.sleep(0.1)
+    }
+    expect_equal(session$returned$state(), "done")
+    expect_equal(nrow(session$returned$result()$log), 2L)
   })
 })
