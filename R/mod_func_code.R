@@ -2,7 +2,7 @@
 #'
 #' @param id Module identifier.
 #' @param mask A mask module contract.
-#' @return Named reactives `function`, `mapping`, `function_valid`,
+#' @return Named reactives `fun`, `mapping`, `function_valid`,
 #'   `mapping_valid`, and `error`.
 #' @noRd
 mod_func_code_ui <- function(id) {
@@ -77,7 +77,7 @@ mod_func_code_server <- function(id, mask) {
     output$argscheck <- renderText(if (mapping_valid()) "Arguments mapping is valid" else mapping_error() %||% "No mapping validated")
 
     list(
-      function = reactive(current_function()), mapping = reactive(current_mapping()),
+      fun = reactive(current_function()), mapping = reactive(current_mapping()),
       function_valid = function_valid, mapping_valid = mapping_valid,
       error = reactive(function_error() %||% mapping_error())
     )

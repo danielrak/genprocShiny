@@ -29,5 +29,5 @@ test_that("real genproc processes successful and failing cases", {
 
   expect_s3_class(result, "genproc_result")
   expect_equal(nrow(result$log), 3)
-  expect_length(genproc::errors(result), 1)
+  expect_equal(nrow(genproc::errors(result)), 1)
 })

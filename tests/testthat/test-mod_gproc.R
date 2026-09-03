@@ -2,7 +2,7 @@ execution_inputs <- function() {
   list(
     mask = list(data = shiny::reactive(data.frame(x = 1:2)), valid = shiny::reactive(TRUE)),
     function_input = list(
-      function = shiny::reactive(function(x) x), mapping = shiny::reactive(NULL),
+      fun = shiny::reactive(function(x) x), mapping = shiny::reactive(NULL),
       function_valid = shiny::reactive(TRUE), mapping_valid = shiny::reactive(TRUE)
     )
   )
@@ -28,12 +28,12 @@ test_that("duplicate runs are ignored and a terminal job is awaited once", {
     }, poll_ms = 100L
   ), {
     session$setInputs(go = 1, parallel = FALSE, workers = 1, nonblocking = TRUE)
-    expect_equal(state(), "running")
+    expect_equal(session$returned$state(), "running")
     session$setInputs(go = 2)
     expect_equal(starts, 1L)
     session$elapse(100)
-    expect_equal(state(), "done")
-    expect_s3_class(result(), "genproc_result")
+    expect_equal(session$returned$state(), "done")
+    expect_s3_class(session$returned$result(), "genproc_result")
     session$elapse(200)
     expect_equal(awaits, 1L)
   })
@@ -48,7 +48,7 @@ test_that("invalid mapping prevents execution", {
     run_job = function(...) starts <<- starts + 1L
   ), {
     session$setInputs(go = 1)
-    expect_equal(state(), "error")
+    expect_equal(session$returned$state(), "error")
     expect_equal(starts, 0L)
   })
 })
@@ -64,11 +64,11 @@ test_that("changed inputs mark a completed result stale", {
     run_job = function(...) fake_result
   ), {
     session$setInputs(go = 1, parallel = FALSE, workers = 1, nonblocking = FALSE)
-    expect_equal(state(), "done")
+    expect_equal(session$returned$state(), "done")
     mask_value(data.frame(x = 2))
     session$flushReact()
-    expect_equal(state(), "stale")
-    expect_true(stale())
+    expect_equal(session$returned$state(), "stale")
+    expect_true(session$returned$stale())
   })
 })
 

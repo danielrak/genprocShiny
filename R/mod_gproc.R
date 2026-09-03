@@ -35,7 +35,7 @@ mod_gproc_server <- function(id, mask, function_input,
         isTRUE(function_input$mapping_valid())
     )
     current_snapshot <- reactive(list(
-      mask = mask$data(), function = function_input$function(),
+      mask = mask$data(), fun = function_input$fun(),
       mapping = function_input$mapping()
     ))
 
@@ -70,7 +70,7 @@ mod_gproc_server <- function(id, mask, function_input,
       values$state <- "running"
       tryCatch({
         started <- run_job(
-          f = function_input$function(), mask = mask$data(),
+          f = function_input$fun(), mask = mask$data(),
           mapping = function_input$mapping(),
           use_parallel = isTRUE(input$parallel), workers = input$workers %||% 1L,
           nonblocking = !identical(input$nonblocking, FALSE)
