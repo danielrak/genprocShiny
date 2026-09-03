@@ -114,7 +114,7 @@ This is useful when the user starts from a working script rather than from a for
 
 ### Programmatic use
 
-The same feature is also available directly in R through `from_example_to_function()`.
+The same feature is also available directly in R through `genproc::from_example_to_function()`.
 
 ```{r eval = FALSE}
 expr <- expression({
@@ -122,7 +122,7 @@ expr <- expression({
   rio::export(data, "/some/out/iris.csv")
 })
 
-from_example_to_function(expr)
+genproc::from_example_to_function(expr)
 ```
 
 In the current proof of concept, this function is especially helpful as a bridge between ad hoc code and reusable processing logic.
@@ -152,19 +152,11 @@ The app validates that:
 
 ## Step 4 - Run the process
 
-In the **Execution** section:
-
-- choose a process label;
-- select a logs directory;
-- click **Run**.
-
-The app then launches the processing job and saves log files to the selected location.
+In the **Execution** section, choose sequential or bounded parallel execution and click **Run**. The default non-blocking mode keeps the Shiny session responsive while the app tracks the job state.
 
 ## Step 5 - Retrieve the logs
 
-In the **Results** section, click **Get logs** to load the resulting log table.
-
-The current proof of concept focuses on row-wise success/error feedback so the user can inspect which cases succeeded and which failed.
+The **Results** section displays the status and structured log from the in-memory `genproc_result`. The result is never rediscovered through a process label or filesystem path.
 
 ## What this proof of concept already shows
 

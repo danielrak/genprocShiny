@@ -5,19 +5,8 @@
 #' @import shiny
 #' @noRd
 app_server <- function(input, output, session) {
-  mask_data_return <- mod_mask_server("mask_1")
-  func_mod_return  <- mod_func_code_server("func_1", mask_data = mask_data_return)
-
-  gproc_mod_return <- mod_gproc_server(
-    "gproc_1",
-    mask_data_return = mask_data_return,
-    func_code_return = func_mod_return[["func_code_return"]],
-    args_mapping_return = func_mod_return[["args_mapping_return"]]
-  )
-
-  mod_log_server(
-    "log_1",
-    logs_path_return = gproc_mod_return[["logs_path_return"]],
-    proc_label_return = gproc_mod_return[["proc_label_return"]]
-  )
+  mask <- mod_mask_server("mask_1")
+  function_input <- mod_func_code_server("func_1", mask = mask)
+  execution <- mod_gproc_server("gproc_1", mask = mask, function_input = function_input)
+  mod_log_server("log_1", execution = execution)
 }

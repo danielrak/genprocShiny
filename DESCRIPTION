@@ -8,23 +8,20 @@ Description: PoC Shiny app / Package that provides tools for applying a
     and parallel execution.
 License: MIT + file LICENSE
 Imports: 
-    callr,
     config,
     dplyr,
     DT,
-    furrr,
-    future,
+    genproc (>= 0.2.0),
     golem,
-    parallel,
     purrr,
     readr,
     rio,
-    rlang,
     shiny,
-    shinyFiles,
     stringr,
     tools,
     utils
+Remotes:
+    danielrak/genproc
 Suggests: 
     knitr,
     rmarkdown,

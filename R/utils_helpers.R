@@ -6,9 +6,20 @@
 #' @param text Input text
 #'
 #' @noRd
-eval_parse <- function (text) {
-  stopifnot(is.character(text))
-  eval(parse(text = text))
+eval_parse <- function(text, env = parent.frame()) {
+  parsed <- parse_single_expression(text)
+  eval(parsed[[1L]], envir = env)
+}
+
+parse_single_expression <- function(text) {
+  if (!is.character(text) || length(text) != 1L || !nzchar(text)) {
+    stop("Code must be one non-empty character string", call. = FALSE)
+  }
+  parsed <- parse(text = text, keep.source = FALSE)
+  if (length(parsed) != 1L) {
+    stop("Code must contain exactly one expression", call. = FALSE)
+  }
+  parsed
 }
 
 #' Validate mask file
@@ -78,23 +89,24 @@ validate_args <- function (object, mask_data, func) {
     stop("You must code a character vector and not something of other class")
   }
 
-  if (! identical(length(names(object)), length(object))) {
+  if (is.null(names(object)) || any(!nzchar(names(object))) ||
+      length(names(object)) != length(object)) {
     stop("The character vector must be named (over the function arguments)")
   }
 
   # args that are not in mask
   args_nomask <- object[! object %in% names(mask_data)]
   if (length(args_nomask) > 0) {
-    cat(args_nomask)
-    stop("These values doest not match mask names")
+    stop("These values do not match mask names: ", paste(args_nomask, collapse = ", "))
   }
 
   # args names that are not in function formals name
   args_nofunc <- names(object)[! names(object) %in% names(formals(func))]
   if (length(args_nofunc) > 0) {
-    cat(args_nofunc)
-    stop("These names does not match function arguments")
+    stop("These names do not match function arguments: ", paste(args_nofunc, collapse = ", "))
   }
+
+  genproc::rename_function_params(func, mapping = object)
 
   "Args mapping code is valid"
 
