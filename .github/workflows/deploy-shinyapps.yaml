@@ -1,0 +1,62 @@
+# Deploy the app to shinyapps.io after R-CMD-check succeeds on main, or on
+# demand from the Actions tab.
+#
+# Requires three repository secrets, copied from
+# https://www.shinyapps.io/admin/#/tokens :
+#   SHINYAPPS_NAME    account name
+#   SHINYAPPS_TOKEN   token
+#   SHINYAPPS_SECRET  secret
+# Until they are set the job exits early with a warning instead of failing.
+on:
+  workflow_run:
+    workflows: ["R-CMD-check.yaml"]
+    types: [completed]
+    branches: [main, master]
+  workflow_dispatch:
+
+name: deploy-shinyapps.yaml
+
+permissions: read-all
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME }}
+      SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+      SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+
+    steps:
+      - name: Check that the shinyapps.io secrets are set
+        id: secrets
+        run: |
+          if [ -z "$SHINYAPPS_NAME" ] || [ -z "$SHINYAPPS_TOKEN" ] || [ -z "$SHINYAPPS_SECRET" ]; then
+            echo "::warning::SHINYAPPS_NAME, SHINYAPPS_TOKEN or SHINYAPPS_SECRET is not set; skipping deployment."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.secrets.outputs.configured == 'true'
+
+      - uses: r-lib/actions/setup-pandoc@v2
+        if: steps.secrets.outputs.configured == 'true'
+
+      - uses: r-lib/actions/setup-r@v2
+        if: steps.secrets.outputs.configured == 'true'
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        if: steps.secrets.outputs.configured == 'true'
+        with:
+          extra-packages: any::rsconnect, any::pkgload
+
+      - name: Deploy to shinyapps.io
+        if: steps.secrets.outputs.configured == 'true'
+        run: Rscript dev/deploy_shinyapps.R

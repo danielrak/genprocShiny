@@ -113,6 +113,21 @@ execution**.
 
 ------------------------------------------------------------------------
 
+## Live demo
+
+The app is deployed to shinyapps.io from the `main` branch by the
+`deploy-shinyapps.yaml` GitHub Actions workflow, which runs after
+`R-CMD-check` succeeds:
+
+<https://danielrak.shinyapps.io/genprocshiny/>
+
+The deployment needs three repository secrets (`SHINYAPPS_NAME`,
+`SHINYAPPS_TOKEN`, `SHINYAPPS_SECRET`), copied from the shinyapps.io
+*Tokens* page. The same deployment can be run locally with
+`Rscript dev/deploy_shinyapps.R` after `rsconnect::setAccountInfo()`.
+
+------------------------------------------------------------------------
+
 ## Installation
 
 You can install the development version with:
